@@ -1,3 +1,6 @@
+/*pthread_mut锁的争夺为随机的，不存在轮流交换锁
+*在嵌入式音视频中，若是一线程为获取帧，另一线程为发送帧，后者需要前者作为前提，这时前者因为if判断语句而丢失帧
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
