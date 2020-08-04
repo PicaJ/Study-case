@@ -1,0 +1,35 @@
+#include <stdio.h>
+
+typedef void (*pf_callback[10])(int a);
+
+typedef struct {
+	int index[10];
+	pf_callback pf;
+}Funcp;
+
+void repeat(Funcp *func,int index,char *para)
+{
+	func->pf[index](para);
+}
+
+void hello(char* a)
+{
+	printf("Hello %s\n",(const char *)a);
+}
+
+void count(char *num)
+{
+	int i;
+	printf("%s\n",num);
+}
+
+int main(void)
+{
+	Funcp pfunc;
+	pfunc.index[0] = 0;
+	pfunc.pf[0] = hello;
+	pfunc.index[1] = 1;
+	pfunc.pf[1] = count;
+	repeat(&pfunc,pfunc.index[0],"fuxing");
+	repeat(&pfunc,pfunc.index[1],"fuxing");
+}
