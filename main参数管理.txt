@@ -1,7 +1,10 @@
 /*
-*功能：
-*两次getopt（），第一次只检查前7个传入参数，删除检查过的参数，以argc参数数量检查剩下的参数
-*当检查参数发现无效选项时，会把argv中的无效选项位置重新布置，紧靠近有效选项参数的后面，并且互相紧密排列如下：
+*选项和参数无空格隔开时，被检测无效也可以继续使用参数（选项和参数一起被重新排列，但选项和参数为同一组）：
+*	-a str1 -b str2 -cstr3 -dstr4 -estr5 //只需要把同选项删除即可，以下两列做法。。。。 
+*
+*功能（对选项与参数有空格时）：
+*两次getopt（），第一次只检查前7个传入参数（避免检测到无效选项），删除检查过的参数，以argc参数数量检查剩下的参数
+*	当检查参数发现无效选项时，会把argv中的无效选项位置重新布置，紧靠近有效选项参数的后面，并且互相紧密排列如下：
 *	 -a str1 -b str2 -c -d -e str3 str4 str5  从-c开始为无效选型（-c、-d、-e）str3后依次为-c选项参数	
 *以下为测试学习代码，功能性代码在下一个main
 */
@@ -94,7 +97,7 @@ int main(int argc,char **argv){
 
 
 
-以下为功能行完整代码：	//./string_ope -a string1 -b string2 -c string3 -d str4 -e str5 -f str6
+（仅选项与参数空格隔开时）以下为功能行完整代码：	//./string_ope -a string1 -b string2 -c string3 -d str4 -e str5 -f str6
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -103,7 +106,7 @@ int main(int argc,char **argv){
 int main(int argc,char **argv){
 	i = 0;
 	printf("start optind = %d\n",optind);
-	while((s32Opt = getopt(7, argv, "a:b:c:")) != -1 ){
+	while((s32Opt = getopt(7, argv, "a:b:c:")) != -1 ){	//避免第一次检测到无效选项
 		switch(s32Opt){
 			case 'a':
 				printf("optind = %d optarg = %s argv[optind-1] = %s\n",optind,optarg,argv[optind-1]);
@@ -145,3 +148,57 @@ int main(int argc,char **argv){
 	printf("\n");
 	return 0;
 }
+
+
+（选项与参数不隔开时）：
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <getopt.h>
+#include <string.h>
+int main(int argc,char **argv){
+	i = 0;
+	printf("start optind = %d\n",optind);
+	while((s32Opt = getopt(argc, argv, "a:b:c:")) != -1 ){	//可被检测无效选项
+		switch(s32Opt){
+			case 'a':
+				printf("optind = %d optarg = %s argv[optind-1] = %s\n",optind,optarg,argv[optind-1]);
+				argv[optind-1]="";
+				argv[optind-2]="";
+			case 'b':
+				printf("optind = %d optarg = %s argv[optind-1] = %s\n",optind,optarg,argv[optind-1]);
+				argv[optind-1]="";
+				argv[optind-2]="";
+			case 'c':
+				printf("optind = %d optarg = %s argv[optind-1] = %s\n",optind,optarg,argv[optind-1]);
+				argv[optind-1]="";
+				argv[optind-2]="";
+		}
+	}
+	printf("end!\n");
+	i = 0;
+        while(argv[i] != '\0'){
+                printf("%s\n",argv[i]);
+                i++;
+        }
+        printf("\n");
+	optind = 0;
+	s32Opt = 0;
+	while((s32Opt = getopt(argc, argv, "d:e:f:")) != -1 ){
+		switch(s32Opt){
+			case 'd':
+				printf("optind = %d optarg = %s argv[optind-1] = %s\n",optind,optarg,argv[optind-1]);
+                                		//argv[optind-1]="";
+                               			//argv[optind-2]="";
+		}	
+	}
+	printf("end\n");
+	i = 0;
+	while(argv[i] != '\0'){
+		printf("%s\n",argv[i]);
+		i++;
+	}
+	printf("\n");
+	return 0;
+}
+
