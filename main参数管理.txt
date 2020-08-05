@@ -1,0 +1,147 @@
+/*
+*功能：
+*两次getopt（），第一次只检查前7个传入参数，删除检查过的参数，以argc参数数量检查剩下的参数
+*当检查参数发现无效选项时，会把argv中的无效选项位置重新布置，紧靠近有效选项参数的后面，并且互相紧密排列如下：
+*	 -a str1 -b str2 -c -d -e str3 str4 str5  从-c开始为无效选型（-c、-d、-e）str3后依次为-c选项参数	
+*以下为测试学习代码，功能性代码在下一个main
+*/
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <getopt.h>
+#include <string.h>
+
+int main(int argc,char **argv){
+	printf("---------------------study argv[] what in it!------------------------------------------------------\n");
+	int i = 0;
+	while(argv[i] != NULL){
+		printf("[%d]%s\n",i,argv[i]);
+		i++;
+	}
+	printf("--------------------study optarg how to work & study argv++ what happend-----------------------------\n");
+	unsigned int s32Opt;
+	printf("s32opt = %d\n",s32Opt);
+	//while((s32Opt = getopt(argc, argv, "a:b:c:")) != -1 ){
+	//	printf("%d optarg: %s \n",s32Opt,optarg);
+	//	printf("%d *argv: %s \n",s32Opt,*argv);
+		//argv++;
+	//}
+	printf("----------------------------study how to cut the string of argv---------------------\n");
+	i = 0;
+	printf("start optind = %d\n",optind);
+	while((s32Opt = getopt(7, argv, "a:b:c:")) != -1 ){
+		switch(s32Opt){
+			case 'a':
+				printf("optind = %d optarg = %s argv[optind-1] = %s\n",optind,optarg,argv[optind-1]);
+				argv[optind-1]="";
+				argv[optind-2]="";
+			case 'b':
+				printf("optind = %d optarg = %s argv[optind-1] = %s\n",optind,optarg,argv[optind-1]);
+				argv[optind-1]="";
+				argv[optind-2]="";
+			case 'c':
+				printf("optind = %d optarg = %s argv[optind-1] = %s\n",optind,optarg,argv[optind-1]);
+				argv[optind-1]="";
+				argv[optind-2]="";
+		}
+	}
+	printf("end---------------------------------------------------------------------------\n");
+	i = 0;
+        while(argv[i] != '\0'){
+                printf("%s\n",argv[i]);
+                i++;
+        }
+        printf("\n");
+	i = 0;
+	//printf("clean array!!\n");
+	//char *tempstr[15];
+	//int j = 0;
+	//while(argv[i] != '\0'){
+	//	if(argv[i] != ""){
+	//		tempstr[j] = argv[i];
+	//		j++;
+	//	}
+	//	i++;
+	//}
+	//tempstr[j] = '\0';
+	//i = 0;
+        //while(tempstr[i] != '\0'){
+        //        printf("%s\n",tempstr[i]);
+        //        i++;
+        //}
+	//argv = tempstr;
+        printf("\n");
+	printf("--------------------------study afer cut how to do with left---------------------------------\n");
+	optind = 0;
+	s32Opt = 0;
+	while((s32Opt = getopt(argc, argv, "d:e:f:")) != -1 ){
+		switch(s32Opt){
+			case 'd':
+				printf("optind = %d optarg = %s argv[optind-1] = %s\n",optind,optarg,argv[optind-1]);
+                                //argv[optind-1]="";
+                                //argv[optind-2]="";
+		}	
+	}
+	printf("end---------------------------------------------------------------------------\n");
+	i = 0;
+	while(argv[i] != '\0'){
+		printf("%s\n",argv[i]);
+		i++;
+	}
+	printf("\n");
+	return 0;
+}
+
+
+
+以下为功能行完整代码：	//./string_ope -a string1 -b string2 -c string3 -d str4 -e str5 -f str6
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <getopt.h>
+#include <string.h>
+int main(int argc,char **argv){
+	i = 0;
+	printf("start optind = %d\n",optind);
+	while((s32Opt = getopt(7, argv, "a:b:c:")) != -1 ){
+		switch(s32Opt){
+			case 'a':
+				printf("optind = %d optarg = %s argv[optind-1] = %s\n",optind,optarg,argv[optind-1]);
+				argv[optind-1]="";
+				argv[optind-2]="";
+			case 'b':
+				printf("optind = %d optarg = %s argv[optind-1] = %s\n",optind,optarg,argv[optind-1]);
+				argv[optind-1]="";
+				argv[optind-2]="";
+			case 'c':
+				printf("optind = %d optarg = %s argv[optind-1] = %s\n",optind,optarg,argv[optind-1]);
+				argv[optind-1]="";
+				argv[optind-2]="";
+		}
+	}
+	printf("end!\n");
+	i = 0;
+        while(argv[i] != '\0'){
+                printf("%s\n",argv[i]);
+                i++;
+        }
+        printf("\n");
+	optind = 0;
+	s32Opt = 0;
+	while((s32Opt = getopt(argc, argv, "d:e:f:")) != -1 ){
+		switch(s32Opt){
+			case 'd':
+				printf("optind = %d optarg = %s argv[optind-1] = %s\n",optind,optarg,argv[optind-1]);
+                                		//argv[optind-1]="";
+                               			//argv[optind-2]="";
+		}	
+	}
+	printf("end\n");
+	i = 0;
+	while(argv[i] != '\0'){
+		printf("%s\n",argv[i]);
+		i++;
+	}
+	printf("\n");
+	return 0;
+}
