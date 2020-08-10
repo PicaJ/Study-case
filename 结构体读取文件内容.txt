@@ -1,0 +1,37 @@
+/*文本格式应该按照结构体变量格式排列
+*name[50]实际已经包含文本的50个字节内容
+*/
+#include <stdio.h>
+#include <fcntl.h>
+struct M {
+	char name[50];
+	int age;
+	int tall;
+	char intrudc[50];
+};
+
+int main(){
+
+	struct M a;
+	int fp;
+	int ret;
+	fp = open("./filetest",O_RDONLY,0666);
+	if(fp <= 0){
+		printf("open fail!\n");
+		return -1;
+	}	
+	ret = read(fp,&a,sizeof(struct M));
+	if(ret < 0){
+		printf("read fail!\n");
+		return -1;
+	}
+
+	int fp2;
+	fp2 = open("./filetest2",O_RDWR,0777);
+	ret = write(fp2,&a,sizeof(struct M));
+	printf("%s\n",a.name);
+	printf("%d\n",a.age);
+	printf("%d\n",a.tall);
+	printf("%s\n",a.intrudc);
+	return 0;
+}
